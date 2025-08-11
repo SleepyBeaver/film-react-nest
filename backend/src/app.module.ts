@@ -14,7 +14,6 @@ import * as path from 'path';
     OrderModule,
     ServeStaticModule.forRoot({
       rootPath: path.join(__dirname, '..', 'public'),
-      serveRoot: '/content/afisha',
     }),
   ],
 })
