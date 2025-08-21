@@ -1,5 +1,5 @@
+// src/app.module.ts
 import { Module } from '@nestjs/common';
-import { AppConfigModule } from './config.module';
 import { DatabaseModule } from './database.module';
 import { FilmsModule } from './films/films.module';
 import { OrderModule } from './order/order.module';
@@ -8,12 +8,12 @@ import * as path from 'path';
 
 @Module({
   imports: [
-    AppConfigModule,
     DatabaseModule,
     FilmsModule,
     OrderModule,
     ServeStaticModule.forRoot({
       rootPath: path.join(__dirname, '..', 'public'),
+      serveRoot: '/content/afisha',
     }),
   ],
 })
