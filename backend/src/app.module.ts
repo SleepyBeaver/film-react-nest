@@ -1,19 +1,19 @@
+// src/app.module.ts
 import { Module } from '@nestjs/common';
-import {ServeStaticModule} from "@nestjs/serve-static";
-import {ConfigModule} from "@nestjs/config";
-import * as path from "node:path";
-
-import {configProvider} from "./app.config.provider";
+import { DatabaseModule } from './database.module';
+import { FilmsModule } from './films/films.module';
+import { OrderModule } from './order/order.module';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import * as path from 'path';
 
 @Module({
   imports: [
-	ConfigModule.forRoot({
-          isGlobal: true,
-          cache: true
-      }),
-      // @todo: Добавьте раздачу статических файлов из public
+    DatabaseModule,
+    FilmsModule,
+    OrderModule,
+    ServeStaticModule.forRoot({
+      rootPath: path.join(__dirname, '..', 'public'),
+    }),
   ],
-  controllers: [],
-  providers: [configProvider],
 })
 export class AppModule {}
