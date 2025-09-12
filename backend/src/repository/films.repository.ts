@@ -9,7 +9,8 @@ import { FilmDTO } from '../films/dto/films.dto';
 export class FilmsRepository {
   constructor(
     @InjectRepository(Film) private readonly filmRepo: Repository<Film>,
-    @InjectRepository(Schedule) private readonly scheduleRepo: Repository<Schedule>,
+    @InjectRepository(Schedule)
+    private readonly scheduleRepo: Repository<Schedule>,
   ) {}
 
   async findAll(): Promise<FilmDTO[]> {
