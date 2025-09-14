@@ -1,6 +1,7 @@
 import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
+import * as cors from 'cors';
 import 'dotenv/config';
 
 import { DevLogger } from './logger/dev.logger';
@@ -13,14 +14,16 @@ async function bootstrap() {
   });
 
   app.setGlobalPrefix('api/afisha');
-  
-  app.enableCors({
-    origin: [
-      'http://localhost:3000',
-      'http://film-react--sleepybeaver.nomorepartiessbs.ru'
-    ],
-    credentials: true,
-  });
+
+  app.use(
+    cors({
+      origin: [
+        'http://localhost:5173',
+        'http://film-react--sleepybeaver.nomorepartiessbs.ru',
+      ],
+      credentials: true,
+    }),
+  );
 
   app.useGlobalPipes(new ValidationPipe());
 
