@@ -13,7 +13,15 @@ async function bootstrap() {
   });
 
   app.setGlobalPrefix('api/afisha');
-  app.enableCors();
+  
+  app.enableCors({
+    origin: [
+      'http://localhost:3000',
+      'http://film-react--sleepybeaver.nomorepartiessbs.ru'
+    ],
+    credentials: true,
+  });
+
   app.useGlobalPipes(new ValidationPipe());
 
   let logger;
