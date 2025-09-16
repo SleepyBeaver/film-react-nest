@@ -7,37 +7,41 @@ export class OrderService {
   constructor(private readonly filmsRepository: FilmsRepository) {}
 
   async create(orderData: CreateOrderDTO) {
-    const { filmId, scheduleId, seats } = orderData;
+    const { tickets, email, phone } = orderData;
 
-    const film = await this.filmsRepository.findById(filmId);
-    if (!film) {
-      throw new BadRequestException(`Фильм с id ${filmId} не найден`);
-    }
+    for (const ticket of tickets) {
+      const { film, session, row, seat } = ticket;
 
-    const schedule = film.schedule.find((s) => s.id === scheduleId);
-    if (!schedule) {
-      throw new BadRequestException(`Сеанс с id ${scheduleId} не найден`);
-    }
+      const filmEntity = await this.filmsRepository.findById(film);
+      if (!filmEntity) {
+        throw new BadRequestException(`Фильм с id ${film} не найден`);
+      }
 
-    const alreadyTaken = seats.filter((seat) => schedule.taken.includes(seat));
-    if (alreadyTaken.length > 0) {
-      throw new BadRequestException(
-        `Места ${alreadyTaken.join(', ')} уже заняты`,
+      const schedule = filmEntity.schedule.find((s) => s.id === session);
+      if (!schedule) {
+        throw new BadRequestException(`Сеанс с id ${session} не найден`);
+      }
+
+      const seatKey = `${row}_${seat}`;
+      if (schedule.taken.includes(seatKey)) {
+        throw new BadRequestException(
+          `Место ${row}-${seat} уже занято на сеанс ${session}`,
+        );
+      }
+
+      schedule.taken.push(seatKey);
+      await this.filmsRepository.updateFilmSession(
+        film,
+        session,
+        schedule.taken,
       );
     }
 
-    const updatedTaken = [...schedule.taken, ...seats];
-    await this.filmsRepository.updateFilmSession(
-      filmId,
-      scheduleId,
-      updatedTaken,
-    );
-
     return {
       message: 'Бронирование успешно',
-      filmId,
-      scheduleId,
-      bookedSeats: seats,
+      email,
+      phone,
+      tickets,
     };
   }
 }
