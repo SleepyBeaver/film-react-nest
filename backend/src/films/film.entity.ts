@@ -4,7 +4,7 @@ import { Schedule } from './schedule.entity';
 @Entity('films')
 export class Film {
   @PrimaryColumn('uuid')
-  id: string; // мы храним внешний UUID (из фронта/фикстур)
+  id: string;
 
   @Column()
   title: string;

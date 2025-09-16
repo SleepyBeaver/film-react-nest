@@ -11,7 +11,10 @@ import { Schedule } from './films/schedule.entity';
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (config: ConfigService) => ({
-        type: config.get<string>('DATABASE_DRIVER') === 'postgres' ? 'postgres' : 'mongodb',
+        type:
+          config.get<string>('DATABASE_DRIVER') === 'postgres'
+            ? 'postgres'
+            : 'mongodb',
         host: config.get<string>('DATABASE_HOST'),
         port: parseInt(config.get<string>('DATABASE_PORT'), 10),
         username: config.get<string>('DATABASE_USERNAME'),

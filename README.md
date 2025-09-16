@@ -1,5 +1,7 @@
 # FILM!
 
+Ссылка на задеплоенное приложение: http://film-react--sleepybeaver.nomorepartiessbs.ru/
+
 ## Установка
 
 ### MongoDB

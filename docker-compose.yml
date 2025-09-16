@@ -1,0 +1,73 @@
+version: "3.9"
+services:
+  backend:
+    build: ./backend
+    image: ghcr.io/sleepybeaver/film-backend:latest
+    container_name: film-backend
+    restart: unless-stopped
+    env_file:
+      - ./backend/.env
+    networks:
+      - app-network
+    depends_on:
+      - db
+
+  db:
+    image: postgres:15-alpine
+    container_name: film-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: film_user
+      POSTGRES_PASSWORD: film_password
+      POSTGRES_DB: film_db
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - app-network
+    ports:
+      - "5432:5432"
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: film-pgadmin
+    restart: unless-stopped
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@example.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "8080:80"
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
+    networks:
+      - app-network
+    depends_on:
+      - db
+
+  nginx:
+    build: ./nginx
+    image: ghcr.io/sleepybeaver/film-nginx:latest
+    container_name: film-nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    volumes:
+      - react_build:/usr/share/nginx/html
+    networks:
+      - app-network
+    depends_on:
+      - backend
+
+  frontend-builder:
+    build: ./frontend
+    image: ghcr.io/sleepybeaver/film-frontend:latest
+    volumes:
+      - react_build:/usr/share/nginx/html
+
+volumes:
+  pgdata:
+  pgadmin-data:
+  react_build:
+
+networks:
+  app-network:
+    driver: bridge
